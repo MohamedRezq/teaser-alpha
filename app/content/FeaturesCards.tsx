@@ -29,7 +29,7 @@ const Page = ({
   };
 
   let className =
-    "absolute top-0 w-full max-w-[600px] sm:aspect-video rounded-[25px] flex flex-col gap-y-2 py-5 justify-center bg-white border-2 border-gray-300 p-24 shadow-lg transition-transform duration-500 ";
+    "absolute top-0 w-full max-w-[600px] sm:aspect-video rounded-[25px] flex flex-col gap-y-1 sm:gap-y-2 py-5 justify-center bg-white border-2 border-gray-300 p-8 sm:p-24 shadow-lg transition-transform duration-500 ";
   let style = {
     transformOrigin: "bottom left",
     zIndex: isNext ? 20 : 10,
@@ -40,7 +40,7 @@ const Page = ({
     style.zIndex = 30; // Bring the current card to the front
   } else if (isNext) {
     className +=
-      "transform scale-95 opacity-70 hover:opacity-80 cursor-pointer -rotate-[-3deg] scale-x-105";
+      "transform scale-95 opacity-70 hover:opacity-80 cursor-pointer -rotate-[-6deg] sm:-rotate-[-3deg] sm:scale-x-105";
   } else {
     className += "opacity-0";
   }
@@ -61,32 +61,32 @@ const FeaturesCards = () => {
     {
       title: "Heading 1",
       content:
-        "If the idea seems elusive, secure your spot on the website for exclusive launch alert and witness the reality firsthand, If the idea seems elusive, secure your spot on the 1",
+        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 1",
     },
     {
       title: "Heading 2",
       content:
-        "If the idea seems elusive, secure your spot on the website for exclusive launch alert and witness the reality firsthand, If the idea seems elusive, secure your spot on the 2",
+        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 2",
     },
     {
       title: "Heading 3",
       content:
-        "If the idea seems elusive, secure your spot on the website for exclusive launch alert and witness the reality firsthand, If the idea seems elusive, secure your spot on the 3",
+        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 3",
     },
     {
       title: "Heading 4",
       content:
-        "If the idea seems elusive, secure your spot on the website for exclusive launch alert and witness the reality firsthand, If the idea seems elusive, secure your spot on the 4",
+        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 4",
     },
     {
       title: "Heading 5",
       content:
-        "If the idea seems elusive, secure your spot on the website for exclusive launch alert and witness the reality firsthand, If the idea seems elusive, secure your spot on the 5",
+        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 5",
     },
   ];
 
   return (
-    <div className="relative w-full h-fit flex items-center justify-center px-10">
+    <div className="relative w-full h-fit flex items-center justify-center mb-[300px] sm:mb-[450px] z-10">
       {pagesData.map((page, index) => (
         <Page
           key={index}

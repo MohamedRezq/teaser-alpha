@@ -24,7 +24,7 @@ const FormSection = () => {
     [selected]
   );
   return (
-    <div className="border border-solid border-apple rounded-[49px] p-[9vw] flex flex-col md:flex-row items-center justify-center gap-[10vw]">
+    <div className="border w-full border-solid border-apple rounded-[49px] px-[6vw] py-[9vw] sm:px-[9vw] flex flex-col md:flex-row items-center justify-center gap-[10vw]">
       <div className="flex flex-col gap-y-[5vw] text-3xl md:text-4xl w-full md:w-1/2">
         <div>
           Discover Your <br />
@@ -89,7 +89,7 @@ const FormSection = () => {
           </fieldset>
           <button
             type="submit"
-            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm w-[250px] mx-20 px-5 py-2.5 text-center"
+            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 rounded-lg text-base font-bold w-full px-5 py-3.5 text-center"
           >
             Submit
           </button>
