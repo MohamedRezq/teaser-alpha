@@ -18,11 +18,11 @@ const ComingSoon = () => {
       </div>
       <div className="text-4xl sm:text-5xl text-center">
         <div>What if you can</div>
-        <div className="mt-1">
+        <div className="mt-2">
           <span className="text-apple">Monitor </span>Saas ROI?
         </div>
       </div>
-      <div className="text-sm sm:text-base text-center opacity-90 mt-2 max-w-[480px]">
+      <div className="text-sm sm:text-base text-center opacity-90 mb-10 max-w-[480px]">
         If the idea seems exclusive, secure your spot on the website for
         exclusive launch alert and witness the reality firsthand
       </div>

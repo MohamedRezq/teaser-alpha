@@ -19,7 +19,7 @@ const config: Config = {
         seagreen: "#2F9F48",
         tomthumb: "#355036",
         fuscousgray: "#585A4B",
-        springleaves: "#5B975D",
+        springleaves: "#509052",
         apple: "#2FC149",
         scorpion: "#595959",
         silverchalice: "#9E9E9E",

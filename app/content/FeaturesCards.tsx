@@ -4,6 +4,7 @@ import React, { useState } from "react";
 interface PageProps {
   title: string;
   content: string;
+  source: string;
   index: number;
   activeIndex: number;
   setActiveIndex: (index: number) => void;
@@ -13,6 +14,7 @@ interface PageProps {
 const Page = ({
   title,
   content,
+  source,
   index,
   activeIndex,
   setActiveIndex,
@@ -29,7 +31,7 @@ const Page = ({
   };
 
   let className =
-    "absolute top-0 w-full max-w-[600px] sm:aspect-video rounded-[25px] flex flex-col gap-y-1 sm:gap-y-2 py-5 justify-center bg-white border-2 border-gray-300 p-8 sm:p-24 shadow-lg transition-transform duration-500 ";
+    "absolute top-0 w-full max-w-[600px] aspect-video rounded-[25px] flex flex-col gap-y-1 sm:gap-y-2 py-5 justify-center bg-white border-2 border-gray-300 pl-[10vw] pr-[13vw] shadow-lg transition-transform duration-500 ";
   let style = {
     transformOrigin: "bottom left",
     zIndex: isNext ? 20 : 10,
@@ -48,8 +50,9 @@ const Page = ({
   return (
     <div className={className} onClick={handleClick} style={style}>
       <p className="text-apple text-2xl sm:text-4xl font-bold mb-3">{title}</p>
-      <p className="text-mineshaft text-base sm:text-lg font-medium">
-        {content}
+      <p className="text-mineshaft text-base font-medium">{content}</p>
+      <p className="text-mineshaft mt-2 text-right text-base font-semibold">
+        Source - <em className="capitalize">{source}</em>
       </p>
     </div>
   );
@@ -60,28 +63,25 @@ const FeaturesCards = () => {
   const pagesData = [
     {
       title: "Heading 1",
-      content:
-        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 1",
+      content: "40% of SaaS subscriptions go unused impacting software ROI",
+      source: "cloud eagle",
     },
     {
       title: "Heading 2",
       content:
-        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 2",
+        "Enterprises grapple with 4.3 orphaned apps and 7.6 duplicates on average",
+      source: "Chief Martec",
     },
     {
       title: "Heading 3",
-      content:
-        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 3",
+      content: "56% of enterprise apps go unmanaged",
+      source: "Productiv",
     },
     {
       title: "Heading 4",
       content:
-        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 4",
-    },
-    {
-      title: "Heading 5",
-      content:
-        "If the idea seems elusiveIf the idea seems elusiveIf the idea seems elusiveIf the idea seems elusive 5",
+        "35% of application adoption can be increased by highlighting under-utilised features",
+      source: "Whatfix",
     },
   ];
 
@@ -92,6 +92,7 @@ const FeaturesCards = () => {
           key={index}
           title={page.title}
           content={page.content}
+          source={page?.source}
           index={index}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
