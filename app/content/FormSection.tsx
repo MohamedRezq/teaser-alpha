@@ -3,6 +3,8 @@ import { createCustomer } from "@/lib/helpers/customer";
 import { IApplication } from "@/lib/models/ApplicationModel";
 import React, { useCallback, useState, useEffect } from "react";
 import { ReactTags, Tag } from "react-tag-autocomplete";
+import loader from "@/public/images/loader.gif";
+import Image from "next/image";
 
 interface Itag {
   id: number;
@@ -18,7 +20,8 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
+  const [loading, setLoading] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(0); // 0: Not Submitted Yet || 1: Success || -1: Failed
   const suggestions: TagSuggestion[] = applications?.map((app) => {
     return { label: app?.label, value: app?.id };
   });
@@ -37,12 +40,8 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
   );
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Extract tag names from selectedTags
-    const selectedTagNames = selectedTags.map((tag) => tag.label);
+    setLoading(true);
     try {
-      // Create a new customer with the provided data and selected application IDs
-
-      // Prepare the request data
       const requestData = {
         name,
         email,
@@ -60,14 +59,17 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
         body: JSON.stringify(requestData),
       });
 
-      if (response.status === 201) {
-        const savedCustomer = await response.json();
-        // Handle success or redirect as needed
+      console.log("response: ", response);
+
+      if (response.status === 200) {
+        setSubmitStatus(1); // 1: Successful Submit
       } else {
-        // Handle error appropriately
+        setSubmitStatus(-1); // -1: Failed Submit
       }
+      setLoading(false);
     } catch (error) {
-      // Handle error appropriately
+      setSubmitStatus(-1); // -1: Failed Submit
+      setLoading(false);
     }
   };
 
@@ -98,7 +100,8 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
             <input
               type="text"
               id="name"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
+              disabled={submitStatus == 1}
+              className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
               placeholder="Name"
               required
               value={name}
@@ -115,18 +118,19 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
             <input
               type="email"
               id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
+              disabled={submitStatus == 1}
+              className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
               placeholder="Email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <fieldset className="mb-5">
+          <fieldset disabled={submitStatus == 1} className="mb-5">
             <legend className="text-sm mx-5 font-medium text-white opacity-70 mb-2">
               Applications
             </legend>
-            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus-within:border focus-within:border-black w-full py-2.5 h-32 px-5 mb-4">
+            <div className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-lg focus-within:border focus-within:border-black w-full py-2.5 h-32 px-5 mb-4">
               <ReactTags
                 // tags={selectedTags}
                 id="applications-selector"
@@ -145,13 +149,29 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
                 placeholderText="Type and select applications..."
               />
             </div>
+            {submitStatus == -1 && (
+              <div className="flex h-5 mt-3 justify-center items-center text-xs text-red-400">
+                Please check your internet connection!
+              </div>
+            )}
           </fieldset>
-          <button
-            type="submit"
-            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 rounded-lg text-base font-bold w-full px-5 py-3.5 text-center"
-          >
-            Submit
-          </button>
+          {submitStatus != 1 && (
+            <button
+              type="submit"
+              className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 rounded-lg text-base font-bold w-full px-5 py-3.5 text-center"
+            >
+              Submit
+            </button>
+          )}
+          {submitStatus == 1 && (
+            <button
+              disabled
+              className="text-white bg-green-900 rounded-lg text-base font-bold w-full px-5 py-3.5 text-center"
+            >
+              Thanks For Submitting!
+            </button>
+          )}
+          {loading && <Image width={40} src={loader} alt="Loading..." />}
         </form>
       </div>
     </div>

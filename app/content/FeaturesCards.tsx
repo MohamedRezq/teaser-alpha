@@ -31,7 +31,7 @@ const Page = ({
   };
 
   let className =
-    "absolute top-0 w-full max-w-[600px] aspect-video rounded-[25px] flex flex-col gap-y-1 sm:gap-y-2 py-5 justify-center bg-white border-2 border-gray-300 pl-[10vw] pr-[13vw] shadow-lg transition-transform duration-500 ";
+    "absolute top-0 w-full lg:max-w-[45%] aspect-video rounded-[25px] flex flex-col gap-y-1 sm:gap-y-2 py-4 justify-center bg-white border-2 border-gray-300 pl-[6vw] pr-[8vw] shadow-lg transition-transform duration-500 ";
   let style = {
     transformOrigin: "bottom left",
     zIndex: isNext ? 20 : 10,
@@ -51,7 +51,7 @@ const Page = ({
     <div className={className} onClick={handleClick} style={style}>
       <p className="text-apple text-2xl sm:text-4xl font-bold mb-3">{title}</p>
       <p className="text-mineshaft text-base font-medium">{content}</p>
-      <p className="text-mineshaft mt-2 text-right text-base font-semibold">
+      <p className="text-mineshaft mt-3 text-right text-base font-semibold">
         Source - <em className="capitalize">{source}</em>
       </p>
     </div>

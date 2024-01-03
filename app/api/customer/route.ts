@@ -1,9 +1,8 @@
 import { createCustomer } from "@/lib/helpers/customer";
 import { ICustomer } from "@/lib/models/CustomerModel";
-import { NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 
-export default async function handler(req: NextRequest, res: NextApiResponse) {
+async function handler(req: NextRequest) {
   let passedValue = await new Response(req.body).text();
   let bodyreq = JSON.parse(passedValue);
   try {
@@ -16,12 +15,11 @@ export default async function handler(req: NextRequest, res: NextApiResponse) {
     );
 
     if (!savedCustomer) {
-      return res?.status(400).json({ error: "Failed to create customer" });
+      return Response.json({ status: 400, error: "Failed to create customer" });
     }
-    res?.status(200).json({ savedCustomer });
-    return savedCustomer;
+    return Response.json({ status: 200, savedCustomer });
   } catch (error) {
-    return res?.status(500).json({ error: "Internal server error" });
+    return Response.json({ status: 500, error: "Internal server error" });
   }
 }
 
