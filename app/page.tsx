@@ -10,7 +10,7 @@ export default async function Home() {
   }) as IApplication[];
 
   return (
-    <main className="flex flex-col items-center justify-between gap-40 px-5 sm:px-20 h-full mb-28 sm:mb-40">
+    <main className="flex flex-col items-center justify-between gap-20 lg:gap-32 px-5 sm:px-20 h-full mb-28 sm:mb-40">
       <ComingSoon />
       <FeaturesCards />
       <FormSection applications={applications} />

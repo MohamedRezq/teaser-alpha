@@ -1,10 +1,10 @@
 "use client";
+import React, { useState, useEffect, useCallback } from "react";
 import { createCustomer } from "@/lib/helpers/customer";
 import { IApplication } from "@/lib/models/ApplicationModel";
-import React, { useCallback, useState, useEffect } from "react";
 import { ReactTags, Tag } from "react-tag-autocomplete";
-import loader from "@/public/images/loader.gif";
 import Image from "next/image";
+import loader from "@/public/images/loader.gif";
 
 interface Itag {
   id: number;
@@ -22,15 +22,30 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(0); // 0: Not Submitted Yet || 1: Success || -1: Failed
+  const [showSnackbar, setShowSnackbar] = useState(false);
   const suggestions: TagSuggestion[] = applications?.map((app) => {
     return { label: app?.label, value: app?.id };
   });
 
-  const handleDelete = (i: number) => {
-    const tags = selectedTags.slice(0);
-    tags.splice(i, 1);
-    setSelectedTags(tags);
-  };
+  // Snackbar timeout function
+  useEffect(() => {
+    let timer: any = null;
+    if (showSnackbar) {
+      timer = setTimeout(() => {
+        setShowSnackbar(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [showSnackbar]);
+
+  const handleDelete = useCallback(
+    (i: number) => {
+      const tags = selectedTags.slice(0);
+      tags.splice(i, 1);
+      setSelectedTags(tags);
+    },
+    [selectedTags]
+  );
 
   const handleAddition = useCallback(
     (newTag: Tag) => {
@@ -38,6 +53,7 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
     },
     [selectedTags]
   );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -45,13 +61,14 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
       const requestData = {
         name,
         email,
-        applications: selectedTags?.map((tag) => {
-          return { id: Number(tag?.value), label: tag?.label };
-        }),
+        applications: selectedTags.map((tag) => ({
+          id: Number(tag?.value),
+          label: tag?.label,
+        })),
       };
 
       // Make a POST request to your API route
-      const response = await fetch("/api/customer", {
+      const createCustomerResponse = await fetch("/api/customer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,24 +76,44 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
         body: JSON.stringify(requestData),
       });
 
-      console.log("response: ", response);
+      // Make a POST request to your API route
+      // const sendEmailResponse = await fetch("/api/email", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email: email,
+      //     subject: "Welcome to AlphaSaas",
+      //     text: "Thank you for sharing your information! <br /> Our SaaS experts will reach out to you shortly to help you optimize your SaaS investments.",
+      //   }),
+      // });
 
-      if (response.status === 200) {
+      if (
+        createCustomerResponse.status === 200
+        // sendEmailResponse.status === 200
+      ) {
         setSubmitStatus(1); // 1: Successful Submit
+        setShowSnackbar(true); // Show snackbar
+        // Trigger email sending function here (e.g., sendEmail function)
       } else {
         setSubmitStatus(-1); // -1: Failed Submit
       }
-      setLoading(false);
     } catch (error) {
       setSubmitStatus(-1); // -1: Failed Submit
-      setLoading(false);
     }
+    setLoading(false);
+  };
+
+  // Example sendEmail function (requires server-side implementation)
+  const sendEmail = async () => {
+    // Implementation depends on your backend setup
   };
 
   return (
     <div
       id="welcome-to-alphasaas"
-      className="border w-full border-solid border-apple rounded-[49px] p-[4vw] lg:p-[7vw] flex flex-col lg:flex-row items-center justify-center gap-[8vw]"
+      className="border w-full border-solid border-apple rounded-[49px] px-[4vw] py-[49px] lg:p-[7vw] flex flex-col lg:flex-row items-center justify-center gap-[8vw]"
     >
       <div className="flex flex-col gap-y-[27px] lg:gap-y-[54px] text-3xl sm:text-4xl lg:text-6xl w-full lg:w-7/12">
         <div>
@@ -101,8 +138,8 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
               type="text"
               id="name"
               disabled={submitStatus == 1}
-              className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
-              placeholder="Name"
+              className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-2xl focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
+              placeholder="First Name/ Last Name"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -119,8 +156,8 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
               type="email"
               id="email"
               disabled={submitStatus == 1}
-              className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
-              placeholder="Email"
+              className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-2xl focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5"
+              placeholder="Work Email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -128,9 +165,9 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
           </div>
           <fieldset disabled={submitStatus == 1} className="mb-5">
             <legend className="text-sm mx-5 font-medium text-white opacity-70 mb-2">
-              Applications
+              Applications and Suites
             </legend>
-            <div className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-lg focus-within:border focus-within:border-black w-full py-2.5 h-32 px-5 mb-4">
+            <div className="bg-gray-50 input-area border border-gray-300 text-gray-900 text-sm rounded-2xl focus-within:border focus-within:border-black w-full py-2.5 h-32 px-5 mb-4">
               <ReactTags
                 // tags={selectedTags}
                 id="applications-selector"
@@ -146,7 +183,7 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
                 onAdd={handleAddition}
                 onDelete={handleDelete}
                 noOptionsText="Suggest New Application"
-                placeholderText="Type and select applications..."
+                placeholderText="Type and select applications / suites ..."
               />
             </div>
             {submitStatus == -1 && (
@@ -158,7 +195,7 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
           {submitStatus != 1 && (
             <button
               type="submit"
-              className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 rounded-lg text-base font-bold w-full px-5 py-3.5 text-center"
+              className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 rounded-2xl text-base font-bold w-full px-5 py-3.5 text-center"
             >
               Submit
             </button>
@@ -166,14 +203,35 @@ const FormSection = ({ applications }: { applications: IApplication[] }) => {
           {submitStatus == 1 && (
             <button
               disabled
-              className="text-white bg-green-900 rounded-lg text-base font-bold w-full px-5 py-3.5 text-center"
+              className="text-apple text-center rounded-lg text-xs sm:text-sm font-bold w-full py-3.5"
             >
-              Thanks For Submitting!
+              Thank you for sharing your information! <br />
+              Our SaaS experts will reach out to you shortly to help you
+              optimize your SaaS investments.
             </button>
           )}
           {loading && <Image width={40} src={loader} alt="Loading..." />}
         </form>
       </div>
+
+      {showSnackbar && (
+        <div className="fixed flex gap-2 text-xs top-5 z-50 left-1/2 transform -translate-x-1/2 bg-green-600 text-white py-2 px-4 rounded-md">
+          Thank you for sharing your information!
+          <button onClick={() => setShowSnackbar(false)}>
+            <svg
+              className="h-4 w-4 opacity-60 cursor-pointer hover:opacity-90"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

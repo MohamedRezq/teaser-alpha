@@ -11,3 +11,5 @@ db.once("open", () => {
 });
 export const MONGO_DB = db;
 //-------------------------------------------------------------------//
+export const EMAIL_USERNAME = process.env.NEXT_PUBLIC_ADMIN_GMAIL_USERNAME;
+export const EMAIL_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_GMAIL_PASSWORD;
